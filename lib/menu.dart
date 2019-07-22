@@ -25,8 +25,6 @@ class _MenuPageState extends State<MenuPage> {
       body: Row(
         children: <Widget>[
           MenuBox(),
-          MenuBox(),
-          MenuBox(),
         ]
       ),
     );
@@ -34,18 +32,50 @@ class _MenuPageState extends State<MenuPage> {
 }
 class MenuBox extends StatelessWidget {
   final Menu menu = _fridge;
+
+  Column _buildButtonColumn(Color color, IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color),
+        Container(
+          decoration: const BoxDecoration(
+
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+          margin: const EdgeInsets.only(top: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      height: 150,
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        border: Border.all(),
+    Color color = Theme.of(context).primaryColor;
+
+    Widget buttonSection = Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildButtonColumn(color, Icons.ac_unit, '冰箱'),
+          _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
+          _buildButtonColumn(color, Icons.share, 'SHARE'),
+        ],
       ),
-      child: RaisedButton(
-        child: Text(menu.name), onPressed: () {},
-      ),
+    );
+
+    return Column(
+      children: <Widget>[
+        buttonSection,
+      ],
     );
   }
 }
