@@ -4,12 +4,16 @@
 
 import 'package:flutter/material.dart';
 
+import 'recipe_list.dart';
+import 'inventory_tabs.dart';
+
 void main() {
   runApp(MaterialApp(
     title: 'Navigation Basics',
     home: BottomNavigationDemo(),
   ));
 }
+
 class NavigationIconView {
   NavigationIconView({
     Widget icon,
@@ -17,19 +21,20 @@ class NavigationIconView {
     String title,
     Color color,
     TickerProvider vsync,
-  }) : _icon = icon,
-       _color = color,
-       _title = title,
-       item = BottomNavigationBarItem(
-         icon: icon,
-         activeIcon: activeIcon,
-         title: Text(title),
-         backgroundColor: color,
-       ),
-       controller = AnimationController(
-         duration: kThemeAnimationDuration,
-         vsync: vsync,
-       ) {
+  })
+      : _icon = icon,
+        _color = color,
+        _title = title,
+        item = BottomNavigationBarItem(
+          icon: icon,
+          activeIcon: activeIcon,
+          title: Text(title),
+          backgroundColor: color,
+        ),
+        controller = AnimationController(
+          duration: kThemeAnimationDuration,
+          vsync: vsync,
+        ) {
     _animation = controller.drive(CurveTween(
       curve: const Interval(0.5, 1.0, curve: Curves.fastOutSlowIn),
     ));
@@ -42,7 +47,8 @@ class NavigationIconView {
   final AnimationController controller;
   Animation<double> _animation;
 
-  FadeTransition transition(BottomNavigationBarType type, BuildContext context) {
+  FadeTransition transition(BottomNavigationBarType type,
+      BuildContext context) {
     Color iconColor;
     if (type == BottomNavigationBarType.shifting) {
       iconColor = _color;
@@ -115,7 +121,7 @@ class BottomNavigationDemo extends StatefulWidget {
 class _BottomNavigationDemoState extends State<BottomNavigationDemo>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
-  BottomNavigationBarType _type = BottomNavigationBarType.shifting;
+  BottomNavigationBarType _type = BottomNavigationBarType.fixed;
   List<NavigationIconView> _navigationViews;
 
   @override
@@ -123,25 +129,26 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
     super.initState();
     _navigationViews = <NavigationIconView>[
       NavigationIconView(
-        icon: const Icon(Icons.access_alarm),
-        title: '提醒',
-        color: Colors.deepPurple,
-        vsync: this,
-      ),
-      NavigationIconView(
-        activeIcon: CustomIcon(),
-        icon: CustomInactiveIcon(),
+        //activeIcon: CustomIcon(),
+        icon: const Icon(Icons.ac_unit),
         title: '冰箱',
         color: Colors.deepOrange,
         vsync: this,
       ),
       NavigationIconView(
+        icon: const Icon(Icons.access_alarm),
+        title: '提醒',
+        color: Colors.deepPurple,
+        vsync: this,
+      ),
+
+      /*NavigationIconView(
         activeIcon: const Icon(Icons.cloud),
         icon: const Icon(Icons.cloud_queue),
         title: 'Cloud',
         color: Colors.teal,
         vsync: this,
-      ),
+      ),*/
       NavigationIconView(
         activeIcon: const Icon(Icons.favorite),
         icon: const Icon(Icons.favorite_border),
@@ -189,7 +196,8 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
   Widget build(BuildContext context) {
     final BottomNavigationBar botNavBar = BottomNavigationBar(
       items: _navigationViews
-          .map<BottomNavigationBarItem>((NavigationIconView navigationView) => navigationView.item)
+          .map<BottomNavigationBarItem>((
+          NavigationIconView navigationView) => navigationView.item)
           .toList(),
       currentIndex: _currentIndex,
       type: _type,
@@ -204,17 +212,19 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
     );
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: const Text('星期の菜谱'),
         actions: <Widget>[
           //MaterialDemoDocumentationButton(BottomNavigationDemo.routeName),
+
           PopupMenuButton<BottomNavigationBarType>(
             onSelected: (BottomNavigationBarType value) {
               setState(() {
                 _type = value;
               });
             },
-            itemBuilder: (BuildContext context) => <PopupMenuItem<BottomNavigationBarType>>[
+            itemBuilder: (BuildContext context) =>
+            <PopupMenuItem<BottomNavigationBarType>>[
               const PopupMenuItem<BottomNavigationBarType>(
                 value: BottomNavigationBarType.fixed,
                 child: Text('Fixed'),
@@ -226,9 +236,9 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
             ],
           ),
         ],
-      ),
+      ),*/
       body: Center(
-        child: _buildTransitionsStack(),
+        child: ScrollableTabsDemo(),
       ),
       bottomNavigationBar: botNavBar,
     );
