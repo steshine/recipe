@@ -58,11 +58,7 @@ class _PageSelector extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: Card(
                       child: Center(
-                        child: DecoratedBox(
-                          decoration:BoxDecoration(
-                            image: DecorationImage(image: icon),
-                          ) ,
-                        ),
+                        child: Image.network('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564066530972&di=2fdb1a87b49c3d05063aa52957324eab&imgtype=0&src=http%3A%2F%2Fimg4.duitang.com%2Fuploads%2Fitem%2F201408%2F11%2F20140811094350_CNiFz.jpeg', fit: BoxFit.cover),
                       ),
                     ),
                   );
