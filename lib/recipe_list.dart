@@ -4,6 +4,9 @@
 
 import 'package:flutter/material.dart';
 
+import 'detail_panels.dart';
+import 'modes.dart';
+
 enum _MaterialListType {
   /// A list tile that contains a single line of text.
   oneLine,
@@ -38,21 +41,10 @@ class _ListDemoState extends State<ListDemo> {
   bool _showIcons = true;
   bool _showDividers = false;
   bool _reverseSort = false;
-  List<String> items = <String>[
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
+  List<SkuItem> items = <SkuItem>[
+   SkuItem(title: '牛肉',icon: Icons.title,desc: '大庄园 1kg',buildRoute:  (BuildContext context) =>  DetailPanel()),
+   SkuItem(title: '羊肉',icon: Icons.title,desc: '大庄园 2kg',buildRoute:  (BuildContext context) =>  DetailPanel()),
+   SkuItem(title: '猪肉',icon: Icons.title,desc: '大庄园 3kg',buildRoute:  (BuildContext context) =>  DetailPanel()),
   ];
 
   void changeItemType(_MaterialListType type) {
@@ -187,7 +179,7 @@ class _ListDemoState extends State<ListDemo> {
     });
   }
 
-  Widget buildListTile(BuildContext context, String item) {
+  Widget buildListTile(BuildContext context, SkuItem item) {
     Widget secondary;
     if (_itemType == _MaterialListType.twoLine) {
       secondary = const Text('Additional item information.');
@@ -201,16 +193,21 @@ class _ListDemoState extends State<ListDemo> {
         isThreeLine: _itemType == _MaterialListType.threeLine,
         dense: _dense,
         leading: _showAvatars
-            ? ExcludeSemantics(child: CircleAvatar(child: Text(item)))
+            ? ExcludeSemantics(child: CircleAvatar(child: Text(item.title.substring(0,1))))
             : null,
-        title: Text('This item represents $item.'),
-        subtitle: secondary,
+        title: Text(item.title),
+        subtitle: Text(item.desc),
         trailing: _showIcons
             ? Icon(Icons.info, color: Theme.of(context).disabledColor)
             : null,
+        onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPanel()));}
       ),
     );
   }
+  void _launchDemo(BuildContext context) {
+       Navigator.pushNamed(context, '/material/expansion_panels');
+  }
+
   @override
   Widget build(BuildContext context) {
     final String layoutText = _dense ? ' \u2013 Dense' : '';
@@ -229,7 +226,7 @@ class _ListDemoState extends State<ListDemo> {
     }
 
     Iterable<Widget> listTiles =
-        items.map<Widget>((String item) => buildListTile(context, item));
+        items.map<Widget>((SkuItem item) => buildListTile(context, item));
     if (_showDividers)
       listTiles = ListTile.divideTiles(context: context, tiles: listTiles);
 

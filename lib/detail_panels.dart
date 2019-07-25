@@ -174,14 +174,14 @@ class DemoItem<T> {
   Widget build() => builder(this);
 }
 
-class ExpansionPanelsDemo extends StatefulWidget {
+class DetailPanel extends StatefulWidget {
   static const String routeName = '/material/expansion_panels';
 
   @override
-  _ExpansionPanelsDemoState createState() => _ExpansionPanelsDemoState();
+  _DetailPanelState createState() => _DetailPanelState();
 }
 
-class _ExpansionPanelsDemoState extends State<ExpansionPanelsDemo> {
+class _DetailPanelState extends State<DetailPanel> {
   List<DemoItem<dynamic>> _demoItems;
 
   @override

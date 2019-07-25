@@ -5,6 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe/recipe_list.dart';
 
+import 'modes.dart';
+
 
 enum TabsDemoStyle {
   iconsAndText,
@@ -12,29 +14,6 @@ enum TabsDemoStyle {
   textOnly
 }
 
-class _Page {
-  const _Page({ this.icon, this.text ,this.list});
-  final IconData icon;
-  final String text;
-  final StatefulWidget list;
-}
-
-const List<_Page> _allPages = <_Page>[
-  _Page(icon: Icons.grade, text: '生骨肉',list:ListDemo()),
-  _Page(icon: Icons.playlist_add, text: '食材',list:ListDemo()),
-  _Page(icon: Icons.check_circle, text: '补剂',list:ListDemo()),
-  _Page(icon: Icons.question_answer, text: '罐头',list:ListDemo()),
-  _Page(icon: Icons.sentiment_very_satisfied, text: '冻干'),
-  _Page(icon: Icons.camera, text: 'APERTURE'),
-  _Page(icon: Icons.assignment_late, text: 'WE MUST'),
-  _Page(icon: Icons.assignment_turned_in, text: 'WE CAN'),
-  _Page(icon: Icons.group, text: 'ALL'),
-  _Page(icon: Icons.block, text: 'EXCEPT'),
-  _Page(icon: Icons.sentiment_very_dissatisfied, text: 'CRYING'),
-  _Page(icon: Icons.error, text: 'MISTAKE'),
-  _Page(icon: Icons.loop, text: 'TRYING'),
-  _Page(icon: Icons.cake, text: 'CAKE'),
-];
 
 class ScrollableTabsDemo extends StatefulWidget {
   static const String routeName = '/material/scrollable-tabs';
@@ -51,7 +30,7 @@ class ScrollableTabsDemoState extends State<ScrollableTabsDemo> with SingleTicke
   @override
   void initState() {
     super.initState();
-    _controller = TabController(vsync: this, length: _allPages.length);
+    _controller = TabController(vsync: this, length: allSkuCategories.length);
   }
 
   @override
@@ -158,7 +137,10 @@ class ScrollableTabsDemoState extends State<ScrollableTabsDemo> with SingleTicke
           controller: _controller,
           isScrollable: true,
           indicator: getIndicator(),
-          tabs: _allPages.map<Tab>((_Page page) {
+          tabs: allSkuCategories.map<Tab>((SkuCategory category){
+            return Tab(text: category.title,icon:Icon(category.icon));
+          }).toList()
+          /*tabs: _allPages.map<Tab>((_Page page) {
             assert(_demoStyle != null);
             switch (_demoStyle) {
               case TabsDemoStyle.iconsAndText:
@@ -169,19 +151,19 @@ class ScrollableTabsDemoState extends State<ScrollableTabsDemo> with SingleTicke
                 return Tab(text: page.text);
             }
             return null;
-          }).toList(),
+          }).toList(),*/
         ),
       ),
       body: TabBarView(
         controller: _controller,
-        children: _allPages.map<Widget>((_Page page) {
+        children: allSkuCategories.map<Widget>((SkuCategory category) {
           return SafeArea(
             top: false,
             bottom: false,
             child: Container(
-              key: ObjectKey(page.icon),
+              key: ObjectKey(category.icon),
               padding: const EdgeInsets.all(2.0),
-              child:  page.list,
+              child:  category.child,
             ),
           );
         }).toList(),
