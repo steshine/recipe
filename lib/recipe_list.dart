@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'detail_panels.dart';
 import 'modes.dart';
-
+import 'dart:async';
 enum _MaterialListType {
   /// A list tile that contains a single line of text.
   oneLine,
@@ -33,6 +33,8 @@ class ListDemo extends StatefulWidget {
 class _ListDemoState extends State<ListDemo> {
   static final GlobalKey<ScaffoldState> scaffoldKey =
       GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   PersistentBottomSheetController<void> _bottomSheet;
   _MaterialListType _itemType = _MaterialListType.threeLine;
@@ -42,10 +44,39 @@ class _ListDemoState extends State<ListDemo> {
   bool _showDividers = false;
   bool _reverseSort = false;
   List<SkuItem> items = <SkuItem>[
-   SkuItem(title: '牛肉',icon: Icons.title,desc: '大庄园 1kg',buildRoute:  (BuildContext context) =>  DetailPanel()),
-   SkuItem(title: '羊肉',icon: Icons.title,desc: '大庄园 2kg',buildRoute:  (BuildContext context) =>  DetailPanel()),
-   SkuItem(title: '猪肉',icon: Icons.title,desc: '大庄园 3kg',buildRoute:  (BuildContext context) =>  DetailPanel()),
+    SkuItem(
+        title: '牛肉',
+        icon: Icons.title,
+        desc: '大庄园 1kg',
+        buildRoute: (BuildContext context) => DetailPanel()),
+    SkuItem(
+        title: '羊肉',
+        icon: Icons.title,
+        desc: '大庄园 2kg',
+        buildRoute: (BuildContext context) => DetailPanel()),
+    SkuItem(
+        title: '猪肉',
+        icon: Icons.title,
+        desc: '大庄园 3kg',
+        buildRoute: (BuildContext context) => DetailPanel()),
   ];
+  Future<void> _handleRefresh() {
+    final Completer<void> completer = Completer<void>();
+    Timer(const Duration(seconds: 3), () {
+      completer.complete();
+    });
+    return completer.future.then<void>((_) {
+      scaffoldKey.currentState?.showSnackBar(SnackBar(
+        content: const Text('Refresh complete'),
+        action: SnackBarAction(
+          label: 'RETRY',
+          onPressed: () {
+            _refreshIndicatorKey.currentState.show();
+          },
+        ),
+      ));
+    });
+  }
 
   void changeItemType(_MaterialListType type) {
     setState(() {
@@ -190,22 +221,26 @@ class _ListDemoState extends State<ListDemo> {
     }
     return MergeSemantics(
       child: ListTile(
-        isThreeLine: _itemType == _MaterialListType.threeLine,
-        dense: _dense,
-        leading: _showAvatars
-            ? ExcludeSemantics(child: CircleAvatar(child: Text(item.title.substring(0,1))))
-            : null,
-        title: Text(item.title),
-        subtitle: Text(item.desc),
-        trailing: _showIcons
-            ? Icon(Icons.info, color: Theme.of(context).disabledColor)
-            : null,
-        onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPanel()));}
-      ),
+          isThreeLine: _itemType == _MaterialListType.threeLine,
+          dense: _dense,
+          leading: _showAvatars
+              ? ExcludeSemantics(
+                  child: CircleAvatar(child: Text(item.title.substring(0, 1))))
+              : null,
+          title: Text(item.title),
+          subtitle: Text(item.desc),
+          trailing: _showIcons
+              ? Icon(Icons.info, color: Theme.of(context).disabledColor)
+              : null,
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DetailPanel()));
+          }),
     );
   }
+
   void _launchDemo(BuildContext context) {
-       Navigator.pushNamed(context, '/material/expansion_panels');
+    Navigator.pushNamed(context, '/material/expansion_panels');
   }
 
   @override
@@ -257,7 +292,9 @@ class _ListDemoState extends State<ListDemo> {
           ),
         ],
       ),*/
-      body: Scrollbar(
+      body: RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _handleRefresh,
         child: ListView(
           padding: EdgeInsets.symmetric(vertical: _dense ? 4.0 : 8.0),
           children: listTiles.toList(),

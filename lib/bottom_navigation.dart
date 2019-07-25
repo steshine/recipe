@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 
-import 'recipe_list.dart';
+import 'cat_selector.dart';
 import 'inventory_tabs.dart';
 
 void main() {
@@ -18,10 +17,12 @@ class NavigationIconView {
     String title,
     Color color,
     TickerProvider vsync,
+    StatefulWidget routeName,
   })
       : _icon = icon,
         _color = color,
         _title = title,
+        _routeName = routeName,
         item = BottomNavigationBarItem(
           icon: icon,
           activeIcon: activeIcon,
@@ -40,6 +41,7 @@ class NavigationIconView {
   final Widget _icon;
   final Color _color;
   final String _title;
+  final StatefulWidget _routeName;
   final BottomNavigationBarItem item;
   final AnimationController controller;
   Animation<double> _animation;
@@ -127,37 +129,34 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
     _navigationViews = <NavigationIconView>[
       NavigationIconView(
         //activeIcon: CustomIcon(),
-        icon: const Icon(Icons.ac_unit),
-        title: '冰箱',
-        color: Colors.deepOrange,
-        vsync: this,
+          icon: const Icon(Icons.ac_unit),
+          title: '冰箱',
+          color: Colors.deepOrange,
+          vsync: this,
+          routeName: ScrollableTabsDemo()
       ),
       NavigationIconView(
-        icon: const Icon(Icons.access_alarm),
-        title: '提醒',
-        color: Colors.deepPurple,
-        vsync: this,
+          icon: const Icon(Icons.access_alarm),
+          title: '提醒',
+          color: Colors.deepPurple,
+          vsync: this,
+          routeName: CatSelector()
       ),
 
-      /*NavigationIconView(
-        activeIcon: const Icon(Icons.cloud),
-        icon: const Icon(Icons.cloud_queue),
-        title: 'Cloud',
-        color: Colors.teal,
-        vsync: this,
-      ),*/
       NavigationIconView(
-        activeIcon: const Icon(Icons.favorite),
-        icon: const Icon(Icons.favorite_border),
-        title: '收藏',
-        color: Colors.indigo,
-        vsync: this,
+          activeIcon: const Icon(Icons.favorite),
+          icon: const Icon(Icons.favorite_border),
+          title: '猫咪',
+          color: Colors.indigo,
+          vsync: this,
+          routeName: CatSelector()
       ),
       NavigationIconView(
-        icon: const Icon(Icons.event_available),
-        title: '菜谱',
-        color: Colors.pink,
-        vsync: this,
+          icon: const Icon(Icons.event_available),
+          title: '菜谱',
+          color: Colors.pink,
+          vsync: this,
+          routeName: CatSelector()
       ),
     ];
 
@@ -235,7 +234,7 @@ class _BottomNavigationDemoState extends State<BottomNavigationDemo>
         ],
       ),*/
       body: Center(
-        child: ScrollableTabsDemo(),
+        child: _navigationViews[_currentIndex]._routeName,
       ),
       bottomNavigationBar: botNavBar,
     );
